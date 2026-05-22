@@ -7,40 +7,42 @@
 упорядочив элементы по годам рождения. 
 Вывести результат. */
 
+#include <string.h>
+
 struct humen {
     char name[50];
     char surname[50];
-    int birth_year;
+    int year;
 };
 
 int main() {
-    struct humen arr1[4];
-    struct humen arr2[4];
-    
+    struct humen a[4];
+    struct humen b[4];
     int i, j;
-    struct humen temp;
+    struct humen tmp;
 
-    printf("Enter data for 4 people (Name, Surname, Year):\n");
-    for (i = 0; i < 4; i++) {
-        printf("Person %d: ", i + 1);
-        scanf("%s %s %d", arr1[i].name, arr1[i].surname, &arr1[i].birth_year);
+    for(i = 0; i < 4; i++) {
+        printf("Enter name, surname and year:\n");
+        scanf("%s", a[i].name);
+        scanf("%s", a[i].surname);
+        scanf("%d", &a[i].year);
     }
-    for (i = 0; i < 4; i++) {
-        arr2[i] = arr1[i];
+    for(i = 0; i < 4; i++) {
+        b[i] = a[i];
     }
-
-    for (i = 0; i < 3; i++) {
-        for (j = 0; j < 3 - i; j++) {
-            if (arr2[j].birth_year > arr2[j+1].birth_year) {
-                temp = arr2[j];
-                arr2[j] = arr2[j+1];
-                arr2[j+1] = temp;
+    for(i = 0; i < 3; i++) {
+        for(j = 0; j < 3 - i; j++) {
+            if(b[j].year > b[j + 1].year) {
+                tmp = b[j];
+                b[j] = b[j + 1];
+                b[j + 1] = tmp;
             }
         }
     }
-    printf("Sorted list: \n");
-    for (i = 0; i < 4; i++) {
-        printf("%s %s, %d\n", arr2[i].name, arr2[i].surname, arr2[i].birth_year);
+    
+    printf("\nSorted:\n");
+    for(i = 0; i < 4; i++) {
+        printf("%s %s %d\n", b[i].name, b[i].surname, b[i].year);
     }
 
     return 0;
