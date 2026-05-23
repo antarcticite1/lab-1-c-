@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct humen {
+    char name[50];
+    char surname[50];
+    int year;
+};
+
+int main() {
+    struct humen a[4];
+    struct humen b[4];
+    int i, j;
+    struct humen tmp;
+    FILE *file;
+
+    file = fopen("data.txt", "r");
+    if (file == NULL) {
+        printf("Error: cannot open data.txt\n");
+        return 1;
+    }
+
+    for(i = 0; i < 4; i++) {
+        fscanf(file, "%s %s %d", a[i].name, a[i].surname, &a[i].year);
+    }
+    fclose(file);
+
+    for(i = 0; i < 4; i++) {
+        b[i] = a[i];
+    }
+
+    for(i = 0; i < 3; i++) {
+        for(j = 0; j < 3 - i; j++) {
+            if(b[j].year > b[j + 1].year) {
+                tmp = b[j];
+                b[j] = b[j + 1];
+                b[j + 1] = tmp;
+            }
+        }
+    }
+
+    printf("\nSorted by year:\n");
+    for(i = 0; i < 4; i++) {
+        printf("%s %s %d\n", b[i].name, b[i].surname, b[i].year);
+    }
+
+    printf("\nOnly Petrovich:\n");
+    for(i = 0; i < 4; i++) {
+        if(strcmp(a[i].surname, "Petrovich") == 0) {
+            printf("%s %s %d\n", a[i].name, a[i].surname, a[i].year);
+        }
+    }
+
+    return 0;
+} 
