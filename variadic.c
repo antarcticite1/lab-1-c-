@@ -51,7 +51,7 @@ int min(int count, ...) {
     return minimum;
 }
 
-float average(int count, ...) {
+double average(int count, ...) {
     va_list args;
     int total = 0;
     
@@ -61,18 +61,5 @@ float average(int count, ...) {
     }
     va_end(args);
     
-    return (float)total / count;
-}
-
-float average_float(int count, ...) {
-    va_list args;
-    float total = 0.0;
-    
-    va_start(args, count);
-    for(int i = 0; i < count; i++) {
-        total += va_arg(args, double);
-    }
-    va_end(args);
-    
-    return total / count;
+    return (double)total / count;
 }
