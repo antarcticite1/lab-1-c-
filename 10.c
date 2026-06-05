@@ -6,40 +6,36 @@
 на вход ко-торому подается массив чисел и их количество. */
 
 #include <string.h>
-#define FIND_MAX(arr, count, result) \
-    do { \
-        result = arr[0]; \
-        for (int i = 1; i < count; i++) { \
-            if (arr[i] > result) { \
-                result = arr[i]; \
-            } \
+
+#define FIND_MAXIMUM_VALUE(arr, size) ({ \
+    double max_val = (arr)[0]; \
+    int i; \
+    for (i = 1; i < (size); i++) { \
+        if ((arr)[i] > max_val) { \
+            max_val = (arr)[i]; \
         } \
-    } while(0)
+    } \
+    max_val; \
+})
 
 int main() {
     char input[1000];
-    double numbers[100];
-    int count = 0;
-    double max_value;
-    char *token;
+    int total_elements = 0;
+    double numbers[1000];
     
-    printf("Enter the numbers: ");
+    printf("enter: ");
     fgets(input, sizeof(input), stdin);
-
-    token = strtok(input, " \n");
-    while (token != NULL && count < 100) {
-        numbers[count] = atof(token);
-        count++;
-        token = strtok(NULL, " \n");
+    
+    char *a = strtok(input, " \n");
+    
+    while (a != NULL) {
+        numbers[total_elements] = atof(a);
+        total_elements++;
+        a = strtok(NULL, " \n");
     }
     
-    if (count == 0) {
-        printf("Error!\n");
-        return 1;
-    }
-
-    FIND_MAX(numbers, count, max_value);
-    printf("Max number is: %g\n", max_value);
+    double max_value = FIND_MAXIMUM_VALUE(numbers, total_elements);
+    printf("max number = %g\n", max_value); 
     
     return 0;
 }
