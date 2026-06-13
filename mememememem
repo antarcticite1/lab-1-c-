@@ -1,0 +1,77 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int main() {
+    int N, M;
+    printf("Enter N (number of elements): ");
+    scanf("%d", &N);
+    printf("Enter M (number of columns): ");
+    scanf("%d", &M);
+
+    int *arr = (int *)malloc(N * sizeof(int));
+    srand(time(NULL));
+
+    FILE *f = fopen("input.txt", "w");
+    for (int i = 0; i < N; i++) {
+        arr[i] = rand() % 100 + 1;
+        fprintf(f, "%d ", arr[i]);
+    }
+    fclose(f);
+
+    free(arr);
+    arr = NULL;
+
+    f = fopen("input.txt", "r");
+    FILE *fout = fopen("output.txt", "w");
+
+    int val;
+    while (fscanf(f, "%d", &val) == 1) {
+        if (val % 5 == 0 && val % 7 == 0)
+            fprintf(fout, "FIVESEVEN ");
+        else if (val % 5 == 0)
+            fprintf(fout, "FIVE ");
+        else if (val % 7 == 0)
+            fprintf(fout, "SEVEN ");
+        else
+            fprintf(fout, "%d ", val);
+    }
+    fclose(f);
+    fclose(fout);
+
+    int rows = N / M;
+    int **matrix = (int **)malloc(rows * sizeof(int *));
+    for (int i = 0; i < rows; i++)
+        matrix[i] = (int *)malloc(M * sizeof(int));
+
+    f = fopen("input.txt", "r");
+    for (int i = 0; i < rows; i++)
+        for (int j = 0; j < M; j++)
+            fscanf(f, "%d", &matrix[i][j]);
+    fclose(f);
+
+    printf("\nMatrix:\n");
+    for (int i = 0; i < rows; i++) {
+        int rowSum = 0;
+        for (int j = 0; j < M; j++) {
+            printf("%d\t", matrix[i][j]);
+            rowSum += matrix[i][j];
+        }
+        printf("| Row sum: %d\n", rowSum);
+    }
+
+    printf("Column sums: ");
+    for (int j = 0; j < M; j++) {
+        int colSum = 0;
+        for (int i = 0; i < rows; i++)
+            colSum += matrix[i][j];
+        printf("%d\t", colSum);
+    }
+    printf("\n");
+
+    for (int i = 0; i < rows; i++)
+        free(matrix[i]);
+    free(matrix);
+
+    return 0;
+}
