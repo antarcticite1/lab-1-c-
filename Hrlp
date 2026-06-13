@@ -1,0 +1,118 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+
+int main() {
+    clock_t start = clock();
+
+    int N, M;
+    printf("Enter number of elements N: ");
+    scanf("%d", &N);
+    printf("Enter number of columns M: ");
+    scanf("%d", &M);
+
+    int *arr = (int *)malloc(N * sizeof(int));
+    srand((unsigned)time(NULL));
+
+    FILE *fin = fopen("input.txt", "w");
+    for (int i = 0; i < N; i++) {
+        arr[i] = rand() % 100 + 1;
+        fprintf(fin, "%d", arr[i]);
+        if (i < N - 1) fprintf(fin, " ");
+    }
+    fclose(fin);
+
+    free(arr);
+    arr = NULL;
+
+    fin = fopen("input.txt", "r");
+
+    int *nums = (int *)malloc(N * sizeof(int));
+    int count = 0;
+    while (count < N && fscanf(fin, "%d", &nums[count]) == 1) {
+        count++;
+    }
+    fclose(fin);
+
+    FILE *fout = fopen("output.txt", "w");
+
+    for (int i = 0; i < count; i++) {
+        if (nums[i] % 5 == 0 && nums[i] % 7 == 0) {
+            fprintf(fout, "FIVESEVEN");
+        } else if (nums[i] % 5 == 0) {
+            fprintf(fout, "FIVE");
+        } else if (nums[i] % 7 == 0) {
+            fprintf(fout, "SEVEN");
+        } else {
+            fprintf(fout, "%d", nums[i]);
+        }
+        if (i < count - 1) fprintf(fout, " ");
+    }
+    fprintf(fout, "\n");
+    fclose(fout);
+
+    printf("Result saved to output.txt\n");
+
+    int rows = count / M;
+    int used = rows * M;
+
+    if (rows == 0) {
+        printf("Not enough elements to form matrix (%d columns)\n", M);
+    } else {
+        int **matrix = (int **)malloc(rows * sizeof(int *));
+        for (int i = 0; i < rows; i++) {
+            matrix[i] = (int *)malloc(M * sizeof(int));
+        }
+
+        int idx = 0;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < M; j++) {
+                matrix[i][j] = nums[idx++];
+            }
+        }
+
+        int *rowSums = (int *)calloc(rows, sizeof(int));
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < M; j++) {
+                rowSums[i] += matrix[i][j];
+            }
+        }
+
+        int *colSums = (int *)calloc(M, sizeof(int));
+        for (int j = 0; j < M; j++) {
+            for (int i = 0; i < rows; i++) {
+                colSums[j] += matrix[i][j];
+            }
+        }
+
+        printf("\nMatrix (%d x %d), used %d of %d elements:\n", rows, M, used, count);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < M; j++) {
+                printf("%5d", matrix[i][j]);
+            }
+            printf("  | Row sum: %d\n", rowSums[i]);
+        }
+
+        printf("      ");
+        for (int j = 0; j < M; j++) printf("-----");
+        printf("\nColumn sums: ");
+        for (int j = 0; j < M; j++) {
+            printf("%5d", colSums[j]);
+        }
+        printf("\n");
+
+        for (int i = 0; i < rows; i++) free(matrix[i]);
+        free(matrix);
+        free(rowSums);
+        free(colSums);
+    }
+
+    free(nums);
+
+    clock_t end = clock();
+    double elapsed = (double)(end - start) / CLOCKS_PER_SEC;
+    printf("\nProgram execution time: %.6f sec\n", elapsed);
+
+    return 0;
+}
